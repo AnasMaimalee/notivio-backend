@@ -20,7 +20,10 @@ class CourseController extends Controller
         $user = auth('api')->user();
         $courses = $this->service->listCourses($user);
 
-        return response()->json($courses);
+        return response()->json([
+            'message' => 'Courses Retrieved Successfully',
+            'data' => $courses
+        ]);
     }
 
 
@@ -36,13 +39,19 @@ class CourseController extends Controller
 
         $course = $this->service->createCourse($data);
 
-        return response()->json($course, 201);
+        return response()->json([
+            'message' => 'Course Created Successfully',
+            'data' => $course
+        ]);
     }
 
     public function show($id)
     {
         $course = $this->service->getCourse($id);
-        return response()->json($course);
+        return response()->json([
+            'message' => 'Course Retrieved Successfully',
+            'data' => $course
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -54,7 +63,10 @@ class CourseController extends Controller
 
         $course = $this->service->updateCourse($id, $request->only(['title', 'description']));
 
-        return response()->json($course);
+        return response()->json([
+            'message' => "Course Updated Successfully",
+            'data' => $course
+        ]);
     }
 
     public function destroy($id)
