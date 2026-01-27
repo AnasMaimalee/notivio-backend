@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\API\Course\CourseController;
-use App\Http\Controllers\API\JottingController;
-use App\Http\Controllers\API\AttachmentController;
+use App\Http\Controllers\API\Jotting\JottingController;
+use App\Http\Controllers\API\Attachment\AttachmentController;
 use App\Http\Controllers\API\SharedJottingController;
 
 // Auth routes
@@ -63,4 +63,12 @@ Route::middleware('auth:api')->group(function () {
     Route::put('profile', [ProfileController::class, 'update']);
     Route::post('profile/change-password', [ProfileController::class, 'changePassword']);
     Route::post('profile/security', [ProfileController::class, 'updateSecurity']);
+});
+
+
+Route::prefix('jottings/{jotting}/attachments')->group(function () {
+    Route::post('/', [AttachmentController::class, 'store']);
+    Route::get('/', [AttachmentController::class, 'index']);
+    Route::get('{attachment}', [AttachmentController::class, 'show']);
+    Route::delete('{attachment}', [AttachmentController::class, 'destroy']);
 });
