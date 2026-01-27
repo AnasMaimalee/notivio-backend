@@ -9,30 +9,24 @@ class JottingVersion extends Model
 {
     use HasFactory;
 
-    protected $table = 'jotting_versions';
-
-    protected $keyType = 'string';
-    public $incrementing = false;
-
     protected $fillable = [
         'id',
         'jotting_id',
-        'edited_by',
+        'user_id',
         'content',
         'version',
     ];
 
-    /* =====================
-        RELATIONSHIPS
-    ====================== */
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     public function jotting()
     {
         return $this->belongsTo(Jotting::class);
     }
 
-    public function editor()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'edited_by');
+        return $this->belongsTo(User::class);
     }
 }

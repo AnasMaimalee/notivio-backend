@@ -37,6 +37,10 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('{attachment}', [AttachmentController::class, 'destroy']);
     });
 
+    Route::get('jottings/{jotting}/versions', [JottingVersionController::class, 'index']);
+    Route::post('jottings/{jotting}/versions/{version}/restore', [JottingVersionController::class, 'restore']);
+
+
     // Shared Jottings
     Route::prefix('jottings/{jotting}/share')->group(function () {
         Route::post('/', [SharedJottingController::class, 'share']);
