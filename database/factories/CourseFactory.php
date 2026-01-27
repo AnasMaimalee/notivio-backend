@@ -23,7 +23,7 @@ class CourseFactory extends Factory
             'id' => (string) Str::uuid(),
             'title' => $this->faker->words(3, true),
             'description' => $this->faker->sentence(),
-            'user_id' => User::inRandomOrder()->value('id'),
+            'user_id' => 'ceae0c73-2e42-47f8-ab50-78fc444fb6f1',
         ];
     }
 }

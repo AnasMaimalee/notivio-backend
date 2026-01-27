@@ -13,7 +13,7 @@ class UserSeeder extends Seeder
     {
         // Superadmin
         User::create([
-            'id' => (string) Str::uuid(),
+            'id' => '995deeb0-15c1-4f01-bdf7-1dcfdee2eb26',
             'name' => 'Notivio Super Admin',
             'email' => 'admin@notivio.com',
             'password' => Hash::make('password'),
@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
         ]);
 
          User::create([
-            'id' => Str::uuid(),
+            'id' => 'ceae0c73-2e42-47f8-ab50-78fc444fb6f1',
             'name' => 'Notivio User',
             'email' => 'anas@notivio.com',
             'password' => Hash::make('password'),

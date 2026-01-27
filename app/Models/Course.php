@@ -36,4 +36,6 @@ class Course extends Model
     {
         return $this->hasMany(Jotting::class);
     }
+
+
 }

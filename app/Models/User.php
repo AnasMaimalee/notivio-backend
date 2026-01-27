@@ -37,4 +37,15 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function jottings()
+    {
+        return $this->hasMany(Jotting::class);
+    }
+
+    public function sharedJottings()
+    {
+        return $this->hasMany(JottingShare::class, 'shared_with');
+    }
+
 }
