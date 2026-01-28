@@ -86,10 +86,7 @@ Route::middleware('auth:api')->group(function () {
 // ---------------------
 // Superadmin-only routes
 // ---------------------
-Route::middleware(['auth:api', 'role:superadmin'])->group(function () {
-    Route::get('admin/users', [CourseController::class, 'listUsers']);
-    Route::get('admin/analytics', [CourseController::class, 'analytics']);
-});
+
 
 Route::middleware('auth:api')->group(function () {
     
