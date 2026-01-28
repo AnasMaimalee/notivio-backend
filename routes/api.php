@@ -6,6 +6,8 @@ use App\Http\Controllers\API\Course\CourseController;
 use App\Http\Controllers\API\Jotting\JottingController;
 use App\Http\Controllers\API\Attachment\AttachmentController;
 use App\Http\Controllers\API\Jotting\SharedJottingController;
+use App\Http\Controllers\API\Profile\ProfileController;
+use App\Http\Controllers\API\Superadmin\AdminUserController;
 
 // ---------------------
 // Auth routes
@@ -21,6 +23,23 @@ Route::prefix('auth')->group(function () {
         Route::get('me', [AuthController::class, 'me']);
     });
 });
+
+// users management 
+
+Route::middleware(['auth:api', 'role:superadmin'])->prefix('admin')->group(function () {
+    
+    // User management
+    Route::get('users', [AdminUserController::class, 'index']); // list all users
+    Route::get('users/{user}', [AdminUserController::class, 'show']); // user details
+    Route::put('users/{user}/role', [AdminUserController::class, 'updateRole']); // change role
+    Route::put('users/{user}/status', [AdminUserController::class, 'updateStatus']); // deactivate / activate
+    Route::delete('users/{user}', [AdminUserController::class, 'destroy']); // delete user
+
+    // Login / session monitoring
+    Route::get('users/{user}/logins', [AdminUserController::class, 'loginHistory']); // login history
+    Route::get('users/{user}/sessions', [AdminUserController::class, 'sessions']); // active sessions
+});
+
 
 // ---------------------
 // Protected API routes
@@ -43,6 +62,9 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/', [AttachmentController::class, 'index']);
         Route::get('{attachment}', [AttachmentController::class, 'show']);
         Route::delete('{attachment}', [AttachmentController::class, 'destroy']);
+        Route::get('attachments/{attachment}/download',[AttachmentController::class, 'download']);
+        Route::get('attachments/{attachment}/stream',[AttachmentController::class, 'stream']
+    );
     });
 
     // Shared Jottings
@@ -67,4 +89,8 @@ Route::middleware('auth:api')->group(function () {
 Route::middleware(['auth:api', 'role:superadmin'])->group(function () {
     Route::get('admin/users', [CourseController::class, 'listUsers']);
     Route::get('admin/analytics', [CourseController::class, 'analytics']);
+});
+
+Route::middleware('auth:api')->group(function () {
+    
 });
