@@ -15,6 +15,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->uuid('user_id'); // owner of the course
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

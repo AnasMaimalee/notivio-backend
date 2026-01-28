@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Course;
+use App\Policies\CoursePolicy;
 use App\Models\Attachment;
+use App\Models\Jotting;
+use App\Policies\JottingPolicy;
 use App\Policies\AttachmentPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -16,6 +20,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Attachment::class => AttachmentPolicy::class,
+        Course::class => CoursePolicy::class,
+        Jotting::class => JottingPolicy::class,
     ];
 
     /**
@@ -29,3 +35,6 @@ class AuthServiceProvider extends ServiceProvider
         // Gate::define('admin-only', fn ($user) => $user->role === 'superadmin');
     }
 }
+
+
+

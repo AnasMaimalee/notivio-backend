@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('path');
             $table->enum('type', ['image', 'pdf', 'audio']);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('jotting_id')->references('id')->on('jottings')->cascadeOnDelete();
         });

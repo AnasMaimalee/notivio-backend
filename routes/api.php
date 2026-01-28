@@ -8,6 +8,7 @@ use App\Http\Controllers\API\Attachment\AttachmentController;
 use App\Http\Controllers\API\Jotting\SharedJottingController;
 use App\Http\Controllers\API\Profile\ProfileController;
 use App\Http\Controllers\API\Superadmin\AdminUserController;
+use App\Http\Controllers\API\Restore\RestoreController;
 
 // ---------------------
 // Auth routes
@@ -87,7 +88,9 @@ Route::middleware('auth:api')->group(function () {
 // Superadmin-only routes
 // ---------------------
 
-
 Route::middleware('auth:api')->group(function () {
-    
+    Route::post('courses/{id}/restore', [RestoreController::class, 'restoreCourse']);
+    Route::post('jottings/{id}/restore', [RestoreController::class, 'restoreJotting']);
+    Route::post('attachments/{id}/restore', [RestoreController::class, 'restoreAttachment']);
 });
+

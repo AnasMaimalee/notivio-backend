@@ -24,6 +24,7 @@ return new class extends Migration
             $table->json('sketch_data')->nullable(); // canvas JSON
 
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('course_id')->references('id')->on('courses')->cascadeOnDelete();
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();

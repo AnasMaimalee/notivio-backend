@@ -4,15 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Jotting extends Model
 {
-    use HasFactory;
+    use HasFactory, softDeletes;
 
     protected $table = 'jottings';
 
     protected $keyType = 'string';
     public $incrementing = false;
+
+
+    
 
     protected $fillable = [
         'id',
