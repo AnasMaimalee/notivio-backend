@@ -19,6 +19,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             CourseSeeder::class,
             JottingSeeder::class,
+            AttachmentSeeder::class,
+            JottingShareSeeder::class,
+            JottingVersionSeeder::class,
         ]);
     }
 }
