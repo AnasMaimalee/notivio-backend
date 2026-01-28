@@ -19,8 +19,10 @@ class JottingVersionRepository
             ->get();
     }
 
-    public function find($id)
+   public function find(Jotting $jotting, int $version)
     {
-        return JottingVersion::findOrFail($id);
+        return $jotting->versions()
+            ->where('version', $version)
+            ->firstOrFail();
     }
 }

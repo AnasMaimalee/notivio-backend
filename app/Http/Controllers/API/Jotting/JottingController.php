@@ -91,15 +91,19 @@ class JottingController extends Controller
     
     public function versions(Jotting $jotting)
     {
+        $this->authorize('view', $jotting);
+
         return response()->json(
-            app(JottingVersionService::class)->allVersions($jotting)
+            $jotting->versions()->latest()->get()
         );
     }
 
-    public function revertVersion(Jotting $jotting, JottingVersion $version)
+    public function revertVersion(Jotting $jotting, int $version)
     {
         return response()->json(
-            app(JottingVersionService::class)->revert($jotting, $version)
+            app(JottingVersionService::class)
+                ->restore($jotting, $version, auth('api')->user())
         );
     }
+
 }

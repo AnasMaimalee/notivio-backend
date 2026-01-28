@@ -61,4 +61,9 @@ class Jotting extends Model
         return $this->hasMany(Attachment::class);
     }
 
+    public function contributions()
+    {
+        return $this->hasMany(Contribution::class);
+    }
+
 }

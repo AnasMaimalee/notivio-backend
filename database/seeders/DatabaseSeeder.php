@@ -22,7 +22,9 @@ class DatabaseSeeder extends Seeder
             AttachmentSeeder::class,
             JottingShareSeeder::class,
             JottingVersionSeeder::class,
-            LoginAttemptSeeder::class
+            LoginAttemptSeeder::class,
+            ContributionSeeder::class,
+            ContributionItemSeeder::class,
         ]);
     }
 }

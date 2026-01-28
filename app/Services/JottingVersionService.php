@@ -45,4 +45,21 @@ class JottingVersionService
         // Create a new snapshot for the revert action
         return $this->snapshot($jotting, auth('api')->user());
     }
+
+    public function restore(Jotting $jotting, int $version, User $user)
+    {
+        Gate::forUser($user)->authorize('restore', $jotting);
+
+        $versionData = $this->repo->find($jotting, $version);
+
+        // overwrite content
+        $jotting->update([
+            'content' => $versionData->content,
+        ]);
+
+        // snapshot again (important!)
+        $this->snapshot($jotting, $user);
+
+        return $jotting;
+    }
 }
