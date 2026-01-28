@@ -8,6 +8,8 @@ use App\Models\Attachment;
 use App\Models\Jotting;
 use App\Policies\JottingPolicy;
 use App\Policies\AttachmentPolicy;
+use App\Models\Contribution;
+use App\Policirs\ContributionPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -22,6 +24,7 @@ class AuthServiceProvider extends ServiceProvider
         Attachment::class => AttachmentPolicy::class,
         Course::class => CoursePolicy::class,
         Jotting::class => JottingPolicy::class,
+        Contribution::class => ContributionPolicy::class,
     ];
 
     /**

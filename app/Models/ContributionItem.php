@@ -10,6 +10,9 @@ class ContributionItem extends Model
 {
     use HasFactory, HasUuids;
 
+    protected $casts = [
+        'metadata' => 'array',
+    ];
     protected $fillable = [
         'contribution_id',
         'type',

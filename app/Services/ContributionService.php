@@ -82,4 +82,18 @@ class ContributionService
 
         $jotting->save();
     }
+
+     public function accept(Contribution $contribution, $user)
+    {
+        Gate::authorize('review', $contribution);
+
+        return $this->repo->accept($contribution);
+    }
+
+    public function reject(Contribution $contribution, $user)
+    {
+        Gate::authorize('review', $contribution);
+
+        $this->repo->reject($contribution);
+    }
 }

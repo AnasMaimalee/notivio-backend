@@ -40,4 +40,10 @@ class Contribution extends Model
     {
         return $this->hasMany(ContributionItem::class);
     }
+
+    public function jotting()
+    {
+        return $this->belongsTo(Jotting::class);
+    }
+
 }

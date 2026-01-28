@@ -34,4 +34,24 @@ class ContributionRepository
     {
         return $contribution->update($data);
     }
+
+     public function accept(Contribution $contribution): Contribution
+    {
+        $contribution->update(['status' => 'accepted']);
+        return $contribution;
+    }
+
+    public function reject(Contribution $contribution): void
+    {
+        foreach ($contribution->items as $item) {
+
+            if ($item->type === 'voice' && $item->content) {
+                Storage::disk('public')->delete($item->content);
+            }
+
+            $item->delete();
+        }
+
+        $contribution->update(['status' => 'rejected']);
+    }
 }
