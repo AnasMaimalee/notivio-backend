@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Repositories\JottingRepository;
 use App\Models\Jotting;
 use Illuminate\Support\Str;
+use App\Events\JottingUpdated;
 
 class JottingService
 {
@@ -40,6 +41,8 @@ class JottingService
             abort(403, 'Unauthorized');
         }
 
+        broadcast(new JottingUpdated($jotting))->toOthers();
+        
         return $this->repo->update($jotting, $data);
     }
 

@@ -88,4 +88,18 @@ class JottingController extends Controller
 
         return response()->json(['message' => 'Deleted']);
     }
+    
+    public function versions(Jotting $jotting)
+    {
+        return response()->json(
+            app(JottingVersionService::class)->allVersions($jotting)
+        );
+    }
+
+    public function revertVersion(Jotting $jotting, JottingVersion $version)
+    {
+        return response()->json(
+            app(JottingVersionService::class)->revert($jotting, $version)
+        );
+    }
 }

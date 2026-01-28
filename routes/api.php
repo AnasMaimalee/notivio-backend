@@ -5,9 +5,11 @@ use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\API\Course\CourseController;
 use App\Http\Controllers\API\Jotting\JottingController;
 use App\Http\Controllers\API\Attachment\AttachmentController;
-use App\Http\Controllers\API\SharedJottingController;
+use App\Http\Controllers\API\Jotting\SharedJottingController;
 
+// ---------------------
 // Auth routes
+// ---------------------
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
@@ -20,7 +22,9 @@ Route::prefix('auth')->group(function () {
     });
 });
 
+// ---------------------
 // Protected API routes
+// ---------------------
 Route::middleware('auth:api')->group(function () {
 
     // Courses
@@ -28,6 +32,10 @@ Route::middleware('auth:api')->group(function () {
 
     // Jottings
     Route::apiResource('jottings', JottingController::class);
+
+    // Jotting Versions
+    Route::get('jottings/{jotting}/versions', [JottingController::class, 'versions']);
+    Route::post('jottings/{jotting}/versions/{version}/restore', [JottingController::class, 'revertVersion']);
 
     // Attachments
     Route::prefix('jottings/{jotting}/attachments')->group(function () {
@@ -37,10 +45,6 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('{attachment}', [AttachmentController::class, 'destroy']);
     });
 
-    Route::get('jottings/{jotting}/versions', [JottingVersionController::class, 'index']);
-    Route::post('jottings/{jotting}/versions/{version}/restore', [JottingVersionController::class, 'restore']);
-
-
     // Shared Jottings
     Route::prefix('jottings/{jotting}/share')->group(function () {
         Route::post('/', [SharedJottingController::class, 'share']);
@@ -49,26 +53,18 @@ Route::middleware('auth:api')->group(function () {
 
     // Shared notes inbox
     Route::get('shared', [SharedJottingController::class, 'index']);
-});
 
-// Superadmin-only routes
-Route::middleware(['auth:api', 'role:superadmin'])->group(function () {
-    Route::get('admin/users', [CourseController::class, 'listUsers']); // example
-    Route::get('admin/analytics', [CourseController::class, 'analytics']); // example
-});
-
-
-Route::middleware('auth:api')->group(function () {
+    // Profile
     Route::get('profile', [ProfileController::class, 'show']);
     Route::put('profile', [ProfileController::class, 'update']);
     Route::post('profile/change-password', [ProfileController::class, 'changePassword']);
     Route::post('profile/security', [ProfileController::class, 'updateSecurity']);
 });
 
-
-Route::prefix('jottings/{jotting}/attachments')->group(function () {
-    Route::post('/', [AttachmentController::class, 'store']);
-    Route::get('/', [AttachmentController::class, 'index']);
-    Route::get('{attachment}', [AttachmentController::class, 'show']);
-    Route::delete('{attachment}', [AttachmentController::class, 'destroy']);
+// ---------------------
+// Superadmin-only routes
+// ---------------------
+Route::middleware(['auth:api', 'role:superadmin'])->group(function () {
+    Route::get('admin/users', [CourseController::class, 'listUsers']);
+    Route::get('admin/analytics', [CourseController::class, 'analytics']);
 });

@@ -2,39 +2,47 @@
 
 namespace App\Services;
 
-use App\Repositories\JottingVersionRepository;
+use App\Models\Jotting;
+use App\Models\JottingVersion;
 use Illuminate\Support\Str;
 
 class JottingVersionService
 {
-    public function __construct(
-        protected JottingVersionRepository $repo
-    ) {}
-
-    public function snapshot($jotting, $user)
+    /**
+     * Create a new version snapshot of a jotting
+     */
+    public function snapshot(Jotting $jotting, $user)
     {
-        $latest = $jotting->versions()->max('version') ?? 0;
+        $lastVersion = JottingVersion::where('jotting_id', $jotting->id)->max('version') ?? 0;
 
-        return $this->repo->create([
-            'id' => (string) Str::uuid(),
+        return JottingVersion::create([
+            'id' => Str::uuid(),
             'jotting_id' => $jotting->id,
-            'user_id' => $user->id,
+            'edited_by' => $user->id,
             'content' => $jotting->content,
-            'version' => $latest + 1,
+            'version' => $lastVersion + 1,
         ]);
     }
 
-    public function history($jotting)
+    /**
+     * Get all versions for a jotting
+     */
+    public function allVersions(Jotting $jotting)
     {
-        return $this->repo->history($jotting->id);
+        return JottingVersion::where('jotting_id', $jotting->id)
+                             ->with('editor')
+                             ->orderBy('version', 'desc')
+                             ->get();
     }
 
-    public function restore($jotting, $version)
+    /**
+     * Revert jotting to a previous version
+     */
+    public function revert(Jotting $jotting, JottingVersion $version)
     {
-        $jotting->update([
-            'content' => $version->content,
-        ]);
+        $jotting->update(['content' => $version->content]);
 
-        return $jotting;
+        // Create a new snapshot for the revert action
+        return $this->snapshot($jotting, auth('api')->user());
     }
 }
