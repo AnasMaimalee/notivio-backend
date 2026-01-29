@@ -61,6 +61,10 @@ class AuthController extends Controller
             'user' => $user,
             'role' => $role,
             'menus' => $menus,
+            'theme' => [
+                'primary' => $user->primary_color ?? config('app.primary_color'),
+                'secondary' => $user->secondary_color ?? config('app.secondary_color'),
+            ],
             'permissions' => $permissions
         ]);
     }

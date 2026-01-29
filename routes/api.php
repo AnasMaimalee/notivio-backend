@@ -12,6 +12,8 @@ use App\Http\Controllers\API\Restore\RestoreController;
 use App\Http\Controllers\API\Notification\NotificationController;
 use App\Http\Controllers\API\Jotting\JottingVersionController;
 use App\Http\Controllers\API\Trash\TrashController;
+use App\Http\Controllers\API\Activity\ActivityController;
+use App\Http\Controllers\API\Onboarding\UserThemeController;
 
 // ---------------------
 // Auth routes
@@ -115,4 +117,22 @@ Route::middleware('auth:api')->prefix('trash')->group(function () {
     Route::get('/', [TrashController::class, 'index']);
     Route::post('{type}/{id}/restore', [TrashController::class, 'restore']);
     Route::delete('{type}/{id}/force', [TrashController::class, 'forceDelete']);
+});
+
+
+// Activity 
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('me/activity', [ActivityController::class, 'myActivity']);
+});
+
+Route::middleware(['auth:api', 'role:superadmin'])->group(function () {
+    Route::get('admin/activity', [ActivityController::class, 'index']);
+});
+
+// onbaording 
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('/themes/colors', [UserThemeController::class, 'listColors']);
+    Route::post('/onboarding/theme', [UserThemeController::class, 'setTheme']);
 });

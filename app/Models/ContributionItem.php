@@ -20,9 +20,6 @@ class ContributionItem extends Model
         'metadata',
     ];
 
-    protected $casts = [
-        'metadata' => 'array',
-    ];
 
     /* ================= RELATIONSHIPS ================= */
 
