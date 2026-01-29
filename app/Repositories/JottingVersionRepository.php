@@ -25,4 +25,11 @@ class JottingVersionRepository
             ->where('version', $version)
             ->firstOrFail();
     }
+
+    public function findForJotting(string $jottingId, int $version)
+    {
+        return JottingVersion::where('jotting_id', $jottingId)
+            ->where('version', $version)
+            ->firstOrFail();
+    }
 }

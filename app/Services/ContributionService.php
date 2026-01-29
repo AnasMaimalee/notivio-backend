@@ -5,6 +5,9 @@ namespace App\Services;
 use App\Repositories\ContributionRepository;
 use App\Models\Contribution;
 use Illuminate\Support\Facades\Gate;
+use App\Notifications\ContributionSubmitted;
+use App\Notifications\ContributionRejected;
+use App\Notifications\ContributionAccepted;
 
 class ContributionService
 {
@@ -16,6 +19,10 @@ class ContributionService
             $jotting->shares()->where('user_id', $user->id)->exists(),
             403,
             'Not shared with you'
+        );
+
+        $jotting->user->notify(
+            new ContributionSubmitted($contribution, $actor)
         );
 
         return $this->repo->createContribution($jotting->id, $user->id);
@@ -87,12 +94,19 @@ class ContributionService
     {
         Gate::authorize('review', $contribution);
 
+        $contribution->contributor->notify(
+            new ContributionAccepted($contribution, $actor)
+        );
+
         return $this->repo->accept($contribution);
     }
 
     public function reject(Contribution $contribution, $user)
     {
         Gate::authorize('review', $contribution);
+        $contribution->contributor->notify(
+            new ContributionRejected($contribution, $actor)
+        );
 
         $this->repo->reject($contribution);
     }

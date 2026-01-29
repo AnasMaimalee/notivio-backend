@@ -9,6 +9,9 @@ use App\Http\Controllers\API\Jotting\SharedJottingController;
 use App\Http\Controllers\API\Profile\ProfileController;
 use App\Http\Controllers\API\Superadmin\AdminUserController;
 use App\Http\Controllers\API\Restore\RestoreController;
+use App\Http\Controllers\API\Notification\NotificationController;
+use App\Http\Controllers\API\Jotting\JottingVersionController;
+use App\Http\Controllers\API\Trash\TrashController;
 
 // ---------------------
 // Auth routes
@@ -92,5 +95,19 @@ Route::middleware('auth:api')->group(function () {
     Route::post('courses/{id}/restore', [RestoreController::class, 'restoreCourse']);
     Route::post('jottings/{id}/restore', [RestoreController::class, 'restoreJotting']);
     Route::post('attachments/{id}/restore', [RestoreController::class, 'restoreAttachment']);
+});
+
+// Notification 
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('notifications', [NotificationController::class, 'index']);
+    Route::get('notifications/unread', [NotificationController::class, 'unread']);
+    Route::post('notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+
+    //Jooting Version Restore
+    Route::post('jottings/{jotting}/versions/{version}/restore',[JottingVersionController::class, 'restore']);
+
+    //Trash
+    Route::get('/trash', [TrashController::class, 'index']);
 });
 

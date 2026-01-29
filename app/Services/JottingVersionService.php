@@ -62,4 +62,16 @@ class JottingVersionService
 
         return $jotting;
     }
+
+    public function create(Jotting $jotting, User $actor)
+    {
+        $latest = $jotting->versions()->max('version') ?? 0;
+
+        return JottingVersion::create([
+            'jotting_id' => $jotting->id,
+            'edited_by' => $actor->id,
+            'version' => $latest + 1,
+            'snapshot' => app(JottingSnapshotService::class)->make($jotting),
+        ]);
+    }
 }
