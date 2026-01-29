@@ -66,4 +66,10 @@ class TrashController extends Controller
     {
         abort_unless(isset($this->models[$type]), 404, 'Invalid trash type');
     }
+
+    public function stats()
+    {
+        return response()->json($this->service->trashStats());
+    }
+
 }

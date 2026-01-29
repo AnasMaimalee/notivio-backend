@@ -52,4 +52,14 @@ class TrashService
 
         $this->repo->forceDelete($model);
     }
+
+    public function trashStats()
+    {
+        return [
+            'courses' => Course::onlyTrashed()->count(),
+            'jottings' => Jotting::onlyTrashed()->count(),
+            'attachments' => Attachment::onlyTrashed()->count(),
+            'contributions' => Contribution::onlyTrashed()->count(),
+        ];
+    }
 }
