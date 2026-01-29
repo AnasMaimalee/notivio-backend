@@ -2,38 +2,28 @@
 
 namespace App\Repositories;
 
-use App\Models\Course;
-use App\Models\Jotting;
-use App\Models\Attachment;
+use Illuminate\Database\Eloquent\Model;
 
 class TrashRepository
 {
-    public function getTrashedCourses()
+    public function getTrashed(string $modelClass)
     {
-        return Course::onlyTrashed()->with('user')->get();
+        return $modelClass::onlyTrashed()->with(['user'])->get();
     }
 
-    public function getTrashedJottings($user)
+    public function findTrashed(string $modelClass, string $id): Model
     {
-        if ($user->role === 'superadmin') {
-            return Jotting::onlyTrashed()->with('user')->get();
-        }
-
-        return Jotting::onlyTrashed()
-            ->where('user_id', $user->id)
-            ->with('user')
-            ->get();
+        return $modelClass::onlyTrashed()->findOrFail($id);
     }
 
-    public function getTrashedAttachments($user)
+    public function restore(Model $model): Model
     {
-        if ($user->role === 'superadmin') {
-            return Attachment::onlyTrashed()->with('jotting')->get();
-        }
+        $model->restore();
+        return $model->fresh();
+    }
 
-        return Attachment::onlyTrashed()
-            ->whereHas('jotting', fn($q) => $q->where('user_id', $user->id))
-            ->with('jotting')
-            ->get();
+    public function forceDelete(Model $model): void
+    {
+        $model->forceDelete();
     }
 }

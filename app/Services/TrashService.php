@@ -3,64 +3,53 @@
 namespace App\Services;
 
 use App\Repositories\TrashRepository;
+use Illuminate\Support\Facades\Gate;
 
 class TrashService
 {
-    public function __construct(protected TrashRepository $repo) {}
+    public function __construct(
+        protected TrashRepository $repo
+    ) {}
 
-    public function fetchTrash($user)
+    public function list(array $models, $user): array
     {
-        $courses = $this->repo->getTrashedCourses();
-        $jottings = $this->repo->getTrashedJottings($user);
-        $attachments = $this->repo->getTrashedAttachments($user);
+        $items = [];
 
-        $normalized = [];
-
-        // Courses
-        foreach ($courses as $course) {
-            $normalized[] = [
-                'id' => $course->id,
-                'type' => 'course',
-                'title' => $course->title,
-                'deleted_at' => $course->deleted_at,
-                'owner' => [
-                    'id' => $course->user->id,
-                    'name' => $course->user->name,
-                ],
-            ];
+        foreach ($models as $type => $modelClass) {
+            foreach ($this->repo->getTrashed($modelClass) as $model) {
+                if (Gate::forUser($user)->allows('restore', $model)) {
+                    $items[] = [
+                        'id' => $model->id,
+                        'type' => $type,
+                        'label' => $model->title ?? $model->filename ?? 'Item',
+                        'deleted_at' => $model->deleted_at,
+                    ];
+                }
+            }
         }
 
-        // Jottings
-        foreach ($jottings as $jotting) {
-            $normalized[] = [
-                'id' => $jotting->id,
-                'type' => 'jotting',
-                'title' => $jotting->title,
-                'deleted_at' => $jotting->deleted_at,
-                'owner' => [
-                    'id' => $jotting->user->id,
-                    'name' => $jotting->user->name,
-                ],
-            ];
-        }
+        usort($items, fn ($a, $b) =>
+            strtotime($b['deleted_at']) <=> strtotime($a['deleted_at'])
+        );
 
-        // Attachments
-        foreach ($attachments as $attachment) {
-            $normalized[] = [
-                'id' => $attachment->id,
-                'type' => 'attachment',
-                'filename' => $attachment->filename,
-                'deleted_at' => $attachment->deleted_at,
-                'parent' => [
-                    'type' => 'jotting',
-                    'id' => $attachment->jotting->id,
-                ],
-            ];
-        }
+        return $items;
+    }
 
-        // Sort by deleted_at descending
-        usort($normalized, fn($a, $b) => strtotime($b['deleted_at']) <=> strtotime($a['deleted_at']));
+    public function restore(string $modelClass, string $id, $user)
+    {
+        $model = $this->repo->findTrashed($modelClass, $id);
 
-        return $normalized;
+        Gate::forUser($user)->authorize('restore', $model);
+
+        return $this->repo->restore($model);
+    }
+
+    public function forceDelete(string $modelClass, string $id, $user): void
+    {
+        $model = $this->repo->findTrashed($modelClass, $id);
+
+        Gate::forUser($user)->authorize('restore', $model);
+
+        $this->repo->forceDelete($model);
     }
 }

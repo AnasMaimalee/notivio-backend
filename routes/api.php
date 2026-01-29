@@ -107,7 +107,12 @@ Route::middleware('auth:api')->group(function () {
     //Jooting Version Restore
     Route::post('jottings/{jotting}/versions/{version}/restore',[JottingVersionController::class, 'restore']);
 
-    //Trash
-    Route::get('/trash', [TrashController::class, 'index']);
 });
 
+//Trash
+
+Route::middleware('auth:api')->prefix('trash')->group(function () {
+    Route::get('/', [TrashController::class, 'index']);
+    Route::post('{type}/{id}/restore', [TrashController::class, 'restore']);
+    Route::delete('{type}/{id}/force', [TrashController::class, 'forceDelete']);
+});
