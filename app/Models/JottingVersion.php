@@ -12,7 +12,7 @@ class JottingVersion extends Model
     protected $fillable = [
         'id',
         'jotting_id',
-        'user_id',
+        'edited_by',
         'content',
         'version',
     ];

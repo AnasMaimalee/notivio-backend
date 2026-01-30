@@ -8,7 +8,8 @@ use App\Http\Controllers\API\Attachment\AttachmentController;
 use App\Http\Controllers\API\Jotting\SharedJottingController;
 use App\Http\Controllers\API\Profile\ProfileController;
 use App\Http\Controllers\API\Superadmin\AdminUserController;
-use App\Http\Controllers\API\Superadmin\AdminDashboardController;
+use App\Http\Controllers\API\Dashboard\AdminDashboardController;
+use App\Http\Controllers\API\Dashboard\UserDashboardController;
 use App\Http\Controllers\API\Restore\RestoreController;
 use App\Http\Controllers\API\Notification\NotificationController;
 use App\Http\Controllers\API\Jotting\JottingVersionController;
@@ -53,6 +54,7 @@ Route::middleware(['auth:api', 'role:superadmin'])->prefix('admin')->group(funct
 // Protected API routes
 // ---------------------
 Route::middleware('auth:api')->group(function () {
+    Route::middleware('auth:api')->get('/user/dashboard', [UserDashboardController::class, 'index']);
 
     // Courses
     Route::apiResource('courses', CourseController::class);

@@ -66,6 +66,7 @@ class JottingController extends Controller
         $data = $request->validate([
             'title' => 'sometimes|string|max:255',
             'content' => 'nullable|string',
+            
         ]);
 
         $user = auth('api')->user();
