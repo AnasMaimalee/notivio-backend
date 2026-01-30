@@ -8,12 +8,13 @@ use App\Http\Controllers\API\Attachment\AttachmentController;
 use App\Http\Controllers\API\Jotting\SharedJottingController;
 use App\Http\Controllers\API\Profile\ProfileController;
 use App\Http\Controllers\API\Superadmin\AdminUserController;
+use App\Http\Controllers\API\Superadmin\AdminDashboardController;
 use App\Http\Controllers\API\Restore\RestoreController;
 use App\Http\Controllers\API\Notification\NotificationController;
 use App\Http\Controllers\API\Jotting\JottingVersionController;
 use App\Http\Controllers\API\Trash\TrashController;
 use App\Http\Controllers\API\Activity\ActivityController;
-use App\Http\Controllers\API\Onboarding\UserThemeController;
+use App\Http\Controllers\API\Onboarding\OnboardingController;
 
 // ---------------------
 // Auth routes
@@ -44,6 +45,7 @@ Route::middleware(['auth:api', 'role:superadmin'])->prefix('admin')->group(funct
     // Login / session monitoring
     Route::get('users/{user}/logins', [AdminUserController::class, 'loginHistory']); // login history
     Route::get('users/{user}/sessions', [AdminUserController::class, 'sessions']); // active sessions
+    Route::get('dashboard', [AdminDashboardController::class, 'index']);
 });
 
 
@@ -133,6 +135,6 @@ Route::middleware(['auth:api', 'role:superadmin'])->group(function () {
 // onbaording 
 
 Route::middleware('auth:api')->group(function () {
-    Route::get('/themes/colors', [UserThemeController::class, 'listColors']);
-    Route::post('/onboarding/theme', [UserThemeController::class, 'setTheme']);
+    Route::get('/themes/colors', [OnboardingController::class, 'listColors']);
+    Route::post('/onboarding/theme', [OnboardingController::class, 'setTheme']);
 });
